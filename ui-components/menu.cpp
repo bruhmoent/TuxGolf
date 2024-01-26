@@ -166,6 +166,10 @@ void Menu::add_string_button(const std::string& text, std::function<void()> acti
 
 void Menu::draw(sf::RenderWindow& window)
 {
+    sf::View oldView = window.getView();
+
+    window.setView(window.getDefaultView());
+
     if (m_background_shape.getGlobalBounds().width > 0 && m_background_shape.getGlobalBounds().height > 0) {
         window.draw(m_background_shape);
     }
@@ -178,7 +182,10 @@ void Menu::draw(sf::RenderWindow& window)
     {
         item->draw(window);
     }
+
+    window.setView(oldView);
 }
+
 
 void Menu::set_background_color(const sf::Color& color)
 {

@@ -33,19 +33,24 @@ bool MenuButton::on_actions(const ActionDictionary& dictionary) {
 }
 
 bool MenuButton::handle_mouse_click(sf::RenderWindow& window) {
+    sf::View view = window.getView();
+
     sf::Vector2i mouse_pos = sf::Mouse::getPosition(window);
+
     sf::Vector2f mouse_pos_view = window.mapPixelToCoords(mouse_pos);
 
-    sf::FloatRect item_bounds(m_pos.x, m_pos.y, m_width, m_height);
+    sf::FloatRect item_bounds(m_pos.x + view.getCenter().x - window.getSize().x / 2.0f,
+        m_pos.y + view.getCenter().y - window.getSize().y / 2.0f,
+        m_width, m_height);
 
     if (item_bounds.contains(mouse_pos_view)) {
         if (!m_hover) {
             m_hover = true;
-            m_hover_progress = 0.0f; // Initialize the hover progress
+            m_hover_progress = 0.0f;
         }
 
         if (m_hover_progress < 1.0f) {
-            m_hover_progress += 0.15f; // Adjust the fade speed as needed
+            m_hover_progress += 0.15f;
         }
 
         sf::Color current_color = interpolateColors(sf::Color::White, on_hover, m_hover_progress);
@@ -53,7 +58,10 @@ bool MenuButton::handle_mouse_click(sf::RenderWindow& window) {
             m_background_sprite->setColor(current_color);
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        static sf::Clock cooldownClock;
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && cooldownClock.getElapsedTime().asSeconds() > 0.2) {
+            cooldownClock.restart();
+
             if (!m_was_pressed) {
                 m_was_pressed = true;
                 m_action_func();
@@ -67,7 +75,7 @@ bool MenuButton::handle_mouse_click(sf::RenderWindow& window) {
     else {
         if (m_hover) {
             m_hover = false;
-            m_hover_progress = 1.0f; // Initialize the hover progress for fade out
+            m_hover_progress = 1.0f;
 
             sf::Color current_color = interpolateColors(on_hover, sf::Color::White, m_hover_progress);
             if (m_background_sprite) {
@@ -76,12 +84,13 @@ bool MenuButton::handle_mouse_click(sf::RenderWindow& window) {
         }
 
         if (m_hover_progress > 0.0f) {
-            m_hover_progress -= 0.15f; // Adjust the fade speed as needed
+            m_hover_progress -= 0.15f;
         }
     }
 
     return false;
 }
+
 
 sf::Color MenuButton::interpolateColors(const sf::Color& color1, const sf::Color& color2, float progress) {
     sf::Uint8 r = static_cast<sf::Uint8>(color1.r + (color2.r - color1.r) * progress);

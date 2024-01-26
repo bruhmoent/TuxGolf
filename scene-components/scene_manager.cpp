@@ -58,6 +58,8 @@ void SceneManager::bring_to_front(const std::string& sceneName) {
                 m_scenes[i]->m_menu_objects[j]->m_is_active = (i == 0);
             }
         }
+
+        m_scenes[i]->reset_entities();
     }
 }
 

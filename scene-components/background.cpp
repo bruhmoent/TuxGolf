@@ -14,7 +14,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "Background.hpp"
+#include "background.hpp"
 
 Background::Background(const std::string& path, float x, float y, float scroll_x, float scroll_y, bool scrl_enabled)
     : m_x(x), m_y(y), m_scroll_x(scroll_x), m_scroll_y(scroll_y), scroll_enabled(scrl_enabled)
@@ -36,14 +36,20 @@ Background::Background(const std::string& path, float x, float y, float scroll_x
     m_bg_sprite2.setPosition(m_x + m_bg_sprite1.getTexture()->getSize().x, m_y);
 }
 
-
 void Background::draw(sf::RenderWindow& window)
 {
+    sf::View oldView = window.getView();
+
+    window.setView(window.getDefaultView());
+
     window.draw(m_bg_sprite1);
     window.draw(m_bg_sprite2);
+
+    window.setView(oldView);
 }
 
-void Background::scroll(float window_width) {
+void Background::scroll(float window_width) 
+{
         m_x += m_scroll_x;
         m_y += m_scroll_y;
 
@@ -59,4 +65,4 @@ void Background::scroll(float window_width) {
             m_x = m_bg_sprite1.getPosition().x - m_bg_sprite2.getGlobalBounds().width;
             m_bg_sprite2.setPosition(m_x + m_bg_sprite1.getGlobalBounds().width, m_y);
         }
-    }
+}

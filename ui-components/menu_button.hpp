@@ -16,8 +16,6 @@
 
 #include "../ui-util/directives.hpp"
 #include "menu_item.hpp"
-#include <SFML/Graphics.hpp>
-#include <functional>
 
 #ifndef MENU_BUTTON_HPP
 #define MENU_BUTTON_HPP

@@ -25,10 +25,23 @@
 #include "background.hpp"
 #include "../ui-components/menu.hpp"
 #include "../sector/sector.hpp"
+#include "../sector/camera.hpp"
+#include "../entity/concrete_entity_factory.hpp"
+#include "../entity/entity.hpp"
+
+enum EntityType {
+    INVALID_TYPE = -1,
+    SOLDIER = 0
+};
 
 class Scene {
 public:
-    Scene(const std::string& name) : m_name(name) {}
+    Scene(const std::string& name) : m_name(name) 
+    {
+        entityFactoryMap[SOLDIER] = new ConcreteEntityFactory<Soldier>();
+        entityTextures = new EntityTextures();
+        camera = new Camera();
+    }
 
     void add_music_object(MusicObject* music);
     void add_background(Background* background);
@@ -37,6 +50,54 @@ public:
     void song();
     void stop_music();
     void handle_ev(sf::RenderWindow& window);
+
+    void reset_entities() {
+        for (auto& entity : m_entities) {
+            entity->x = 0.0;
+            entity->y = 0.0;
+        }
+    }
+
+    void add_texture_path(const std::string& path) {
+        if (entityTextures) {
+            if (entityTextures->textureMap.find(path) == entityTextures->textureMap.end()) {
+                entityTextures->loadTexture(path);
+            }
+        }
+    }
+
+    template <typename T>
+    EntityType get_entity_type() {
+        if (std::is_same<T, Soldier>::value) {
+            return SOLDIER;
+        }
+        return INVALID_TYPE;
+    }
+
+    template <typename T>
+    void add_entity(const std::string& path) {
+        Entity* newEntity = nullptr;
+
+        auto factoryIt = entityFactoryMap.find(get_entity_type<T>());
+        if (factoryIt != entityFactoryMap.end()) {
+            newEntity = factoryIt->second->create(path);
+        }
+        else {
+            std::cerr << "Invalid EntityType\n";
+            return;
+        }
+
+        if (newEntity) {
+            m_entities.push_back(newEntity);
+        }
+
+        add_texture_path(path);
+    }
+
+    template <typename T>
+    void add_type_entity(const std::string& path) {
+        add_entity<T>(path);
+    }
 
     const std::string& get_name() const { return m_name; }
 
@@ -57,6 +118,18 @@ public:
         m_sectors.clear();
 
         m_menu_objects.clear();
+
+        for (auto& entity : m_entities) {
+            delete entity;
+        }
+        m_entities.clear();
+
+        for (auto& pair : entityFactoryMap) {
+            delete pair.second;
+        }
+
+        delete entityTextures;
+        delete camera;
     }
 
     void add_sector(Sector* sector) {
@@ -74,9 +147,14 @@ public:
 
 private:
     std::vector<Sector*> m_sectors;
+    EntityTextures* entityTextures;
     std::vector<MusicObject*> m_music_objects;
     std::vector<Background*> m_background_objects;
     std::string m_name;
+
+    std::vector<Entity*> m_entities;
+    std::unordered_map<EntityType, EntityFactory*> entityFactoryMap;
+    Camera* camera;
 };
 
 #endif // SCENE_HPP

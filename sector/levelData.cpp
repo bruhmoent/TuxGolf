@@ -21,7 +21,7 @@ void LevelData::saveLevel(const std::string& levelName, const sf::Vector2u& leve
         int estimatedWidth = static_cast<int>(levelSize.x / gridSize.x);
         int estimatedHeight = static_cast<int>(levelSize.y / gridSize.y);
 
-        std::vector<uint32_t> tileIDsFilled(estimatedWidth * estimatedHeight, 0);
+        std::vector<uint32_t> tileIDsFilled(static_cast<size_t>(estimatedWidth) * static_cast<size_t>(estimatedHeight), 0);
 
         for (const auto& tile : tileMap->m_tiles) {
             int x = static_cast<int>(tile.position.x / gridSize.x);

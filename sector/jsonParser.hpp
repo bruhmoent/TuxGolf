@@ -4,12 +4,9 @@
 #include "json.hpp"
 struct TileData;
 
-struct 
-JsonParser 
+struct JsonParser 
 {
-
     static TileData loadTileData(const std::string& filePath);
-
 };
 
 #endif // JSON_PARSER_HPP

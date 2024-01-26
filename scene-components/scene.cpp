@@ -63,4 +63,17 @@ void Scene::draw(sf::RenderWindow& window) {
     {
         displaySectors(window);
     }
+
+    if (m_entities.size() > 0)
+    {
+        //Temporary, the first entity will be always the player, right now its an enemy.
+        camera->viewFollow({ m_entities[0]->x, m_entities[0]->y }, window, 3.f);
+    }
+
+    for (const auto& entity : m_entities) {
+        if (entity) {
+            entity->draw(window, *entityTextures);
+            entity->update();
+        }
+    }
 }

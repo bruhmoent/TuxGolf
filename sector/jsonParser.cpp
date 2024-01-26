@@ -2,8 +2,7 @@
 #include "tileData.hpp"
 #include <fstream>
 
-TileData 
-JsonParser::loadTileData(const std::string& filePath) {
+TileData JsonParser::loadTileData(const std::string& filePath) {
 	TileData tileData;
 
 	std::ifstream file(filePath);

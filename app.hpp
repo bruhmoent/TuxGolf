@@ -19,6 +19,7 @@
 #include "ui-util/menu_util.hpp"
 #include "scene-components/scene_manager.hpp"
 #include "external-util/editorLog.hpp"
+#include "entity/concrete_entity_factory.hpp"
 
 #ifndef APP_HPP
 #define APP_HPP
@@ -211,6 +212,7 @@ public:
 
         level_scene->add_menu(back);
         level_scene->add_menu(w1_title);
+        loaded_level->add_type_entity<Soldier>("data/assets/entity/soldier/soldier.png");
 
         m_sc_manager->add_scene(menu_scene);
         m_sc_manager->add_scene(level_scene);
