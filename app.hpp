@@ -14,8 +14,6 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <SFML/Graphics.hpp>
-#include <iostream>
 #include "ui-components/menu_item.hpp"
 #include "ui-components/menu_button.hpp"
 #include "ui-util/menu_util.hpp"
@@ -156,7 +154,7 @@ public:
         level_scene->add_background(fog);
         level_scene->add_music_object(world1_theme);
 
-        Sector* sector = new Sector(editorLog, "example/tileSchema.json", 2000, 600, sf::Vector2f(32.f, 32.f));
+        Sector* sector = new Sector("example/tileSchema.json", 2000, 600, sf::Vector2f(64.f, 64.f));
 
         loaded_level->add_sector(sector);
         loaded_level->add_music_object(level1_theme);
@@ -296,9 +294,10 @@ private:
             std::string action = "level" + std::to_string(index) + ".json";
             i_menu->add_string_button(std::to_string(index), [action, this, m_sc_manager, sector]() {
                 if (this->is_active) {
+                    sf::Vector2u _tmp(2000, 600);
                     this->is_completed = true;
                     m_sc_manager->stop_all_music();
-                    sector->load_level(action, sf::Vector2u(2000, 600));
+                    sector->load_level(action, _tmp);
                     m_sc_manager->bring_to_front("level");
                     m_sc_manager->pass_music("level");
                 }

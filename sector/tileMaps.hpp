@@ -1,5 +1,5 @@
 //  LevelEditor
-//  Copyright (C) 2023 bruhmoent
+//  Copyright (C) 2024 bruhmoent
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -14,41 +14,40 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "directives.hpp"
-
 #ifndef TILEMAPS_HPP
 #define TILEMAPS_HPP
 
-struct TileMap;
+#include <vector>
+#include <SFML/Graphics.hpp>
+#include "tileMap.hpp"
 
-struct 
-TileMaps    
-{
-
+struct TileMaps {
     std::vector<TileMap*> m_tileMaps;
-    int m_activeTileMapIndex = 0;
+    int activeTileMapIndex = 0;
 
-    //Add a tilemap to the tilemaps' struct
+    ~TileMaps();
+
+    // Add a tilemap to the tilemaps' struct
     void addTileMap(const TileMap& tileMap);
 
-    //Set the current active tilemap
+    // Set the current active tilemap
     void setActive(int index);
 
-    //Display layering effect
-    void displayLayering(sf::RenderWindow& window);
+    // Displays all tiles
+    void draw(sf::RenderWindow& window);
 
-    //Displays all tiles
-    void displayAllTiles(sf::RenderWindow& window);
+    // Snap all tiles to the tilemap's grid.
+    void snapTileMapTiles();
 
-    //Get current active tilemap
+    // Get current active tilemap
     TileMap* getCurrentTileMap();
 
-    //Get current active grid size
+    // Get current active grid size
     const sf::Vector2f& getCurrentGridSize();
 
-    //Get current active index
+    // Get current active index
     int getCurrentTileMapIndex();
 
 };
 
-#endif //TILEMAPS_HPP
+#endif // TILEMAPS_HPP

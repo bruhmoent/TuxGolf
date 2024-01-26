@@ -1,5 +1,5 @@
 //  LevelEditor
-//  Copyright (C) 2023 bruhmoent
+//  Copyright (C) 2024 bruhmoent
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -14,51 +14,50 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "directives.hpp"
+#ifndef TILE_MAP_HPP
+#define TILE_MAP_HPP
 
-#ifndef TILEMAP_HPP
-#define TILEMAP_HPP
+#include <SFML/Graphics.hpp>
+#include "tileData.hpp"
 
-struct Tile;
-struct Tiles;
+class TileMap {
+public:
+    //FIXME: A clean up would be handy.
+    TileMap(TileData& _tile_data, int width, int height, const sf::Vector2f& grid_size);
 
-struct 
-TileMap
-{
-
-    int opacity = 255;
-    std::vector<Tile*> m_tileMapTiles;
-    std::vector<Tile*> m_helperMapTiles;
-    sf::Vector2f m_gridSize = { 0.f, 0.f };
-
-    TileMap(const sf::Vector2f& gridSize)
-        : m_gridSize(gridSize) {
+    void addTile(int id, const sf::Vector2f& position);
+    void setTint(sf::Color tintColour);
+    void loadSprites();
+    void draw(sf::RenderWindow& window);
+    void assignTilePositions(const std::vector<uint32_t>& ids);
+    const std::vector<uint32_t>& getTileIDs() const {
+        return m_tileIDs;
     }
 
-    //Change size of tiles
-    void setTileSize(const sf::Vector2f& tileSize);
-
-    //Add a tile to a tilemap
-    void addTile(Tile* tile, Tiles& tiles);
-
-    //Tint a tilemap
-    void tintTiles(sf::Color tintColour);
-
-    //Set opacity of a tilemap
-    void setOpacity(int value);
-
-    //Draw the tilemap
-    void draw(sf::RenderWindow& window);
-
-    //Display the tiles
-    void displayTiles(sf::RenderWindow& window);
-
-    //Set the size of the grid on a tilemap
-    void setGrid(const sf::Vector2f& gridSize);
-
-    //Snap tiles to grid
+    sf::Vector2f getPositionFromIndex(int index) const;
+    inline sf::Vector2f getGridSize() { return m_grid_size; }
+    void removeTile(const sf::Vector2f& position);
+    bool isPositionOccupied(const sf::Vector2f& position) const;
     void snapTileMapTiles();
+    void clearTiles();
+    struct TileInfo {
+        int id;
+        sf::Vector2f position;
+        sf::Sprite sprite;
+    };
+
+    std::vector<TileInfo> m_tiles;
+    TileData& tile_data;
+    std::vector<uint32_t> m_tileIDs;
+    int m_width;
+    int m_height;
+    sf::Vector2f m_grid_size;
+    int opacity = 255;
+    sf::Sprite createSprite(int id, const sf::Vector2f& position);
+
+private:
+    sf::Color m_tint = sf::Color::White;
 
 };
 
-#endif // TILEMAP_HPP
+#endif // TILE_MAP_HPP

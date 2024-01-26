@@ -1,5 +1,5 @@
 //  LevelEditor
-//  Copyright (C) 2023 bruhmoent
+//  Copyright (C) 2024 bruhmoent
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -14,17 +14,20 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "directives.hpp"
+#ifndef TILE_DATA_HPP
+#define TILE_DATA_HPP
 
-#ifndef TILEDATA_HPP
-#define TILEDATA_HPP
+#include <iostream>
+#include <unordered_map>
+#include <string>
+#include <SFML/Graphics.hpp>
 
-struct Tile;
-
-struct 
-TileData {
+struct
+    TileData
+{
 
     std::unordered_map<int, std::string> m_texturePaths;
+    std::unordered_map<int, sf::Texture> m_textures;
 
     //Bind a path to an ID
     void addTexturePath(int id, const std::string& texturePath);
@@ -35,6 +38,9 @@ TileData {
     //Get IDs of the tiles
     std::vector<int> getTileIDs() const;
 
+    //Returns the refernce to a texture by the id parameter.
+    const sf::Texture& getTexture(int id) const;
+
 };
 
-#endif // TILEDATA_HPP
+#endif

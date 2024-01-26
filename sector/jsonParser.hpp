@@ -1,5 +1,3 @@
-#include "directives.hpp"
-
 #ifndef JSON_PARSER_HPP
 #define JSON_PARSER_HPP
 
@@ -7,7 +5,8 @@
 struct TileData;
 
 struct 
-JsonParser {
+JsonParser 
+{
 
     static TileData loadTileData(const std::string& filePath);
 

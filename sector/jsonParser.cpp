@@ -1,5 +1,6 @@
 #include "jsonParser.hpp"
 #include "tileData.hpp"
+#include <fstream>
 
 TileData 
 JsonParser::loadTileData(const std::string& filePath) {
