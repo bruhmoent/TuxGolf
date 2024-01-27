@@ -55,6 +55,19 @@ public:
     int opacity = 255;
     sf::Sprite createSprite(int id, const sf::Vector2f& position);
 
+    std::vector<sf::FloatRect> getTileHitboxes() const {
+        std::vector<sf::FloatRect> hitboxes;
+
+        for (const auto& tile : m_tiles) {
+            sf::FloatRect hitbox = tile.sprite.getGlobalBounds();
+            hitbox.left = tile.position.x;
+            hitbox.top = tile.position.y;
+            hitboxes.push_back(hitbox);
+        }
+
+        return hitboxes;
+    }
+
 private:
     sf::Color m_tint = sf::Color::White;
 

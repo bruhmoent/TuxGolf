@@ -44,6 +44,10 @@ public:
         tileMaps.draw(window);
     }
 
+    const std::vector<TileMap*> getTileMaps() const {
+        return tileMaps.m_tileMaps;
+    }
+
     sf::Vector2u get_sector_size() { return sector_size; }
 
     void load_level(const std::string& levelFilePath, sf::Vector2u& levelSize) {

@@ -50,6 +50,8 @@ void Scene::stop_music()
 }
 
 void Scene::draw(sf::RenderWindow& window) {
+    handleCollisions();
+
     for (const auto& background : m_background_objects) {
         if (background) {
             background->draw(window);
