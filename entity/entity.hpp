@@ -22,15 +22,48 @@
 
 class Entity {
 public:
-    float x = 0.0;
-    float y = 0.0;
-    float vel_x = 2.0;
-    float vel_y = 3.0;
-    sf::FloatRect hitbox;
+    float x = 0.f;
+    float y = 0.f;
+    float vel_x = 0.f;
+    float vel_y = 0.f;
+    float initialY = 0.f;
+    float initialX = 0.f;
 
     virtual ~Entity() = default;
     virtual void update() = 0;
     virtual void draw(sf::RenderWindow& window, EntityTextures& entityTextures) = 0;
+
+    virtual bool selfVsEntity(Entity& other) {
+        return getHitbox().intersects(other.getHitbox());
+    }
+
+    virtual bool selfVsTile(const sf::FloatRect& tileRect) {
+        return getHitbox().intersects(tileRect);
+    }
+
+    virtual sf::FloatRect getHitbox() const {
+        return hitbox;
+    }
+
+    virtual void setHitboxX(float _x) {
+        hitbox.left = _x;
+    }
+
+    virtual void setHitboxY(float _y) {
+        hitbox.top = _y;
+    }
+
+    virtual void setHitbox(sf::FloatRect& _hitbox)
+    {
+        hitbox = _hitbox;
+    }
+
+    virtual void on_hit_signal(const sf::FloatRect& otherHitbox) = 0;
+    int collisionGroup = 0;
+
+private:
+    bool collisionHandled = false;
+    sf::FloatRect hitbox;
 };
 
 #endif // ENTITY_HPP

@@ -1,52 +1,55 @@
-//  LevelEditor
-//  Copyright (C) 2024 bruhmoent
-//
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#ifndef SOLDIER_HPP
+#define SOLDIER_HPP
 
 #include "../entity.hpp"
 #include <cmath>
 
-#ifndef SOLDIER_HPP
-#define SOLDIER_HPP
-
 class Soldier : public Entity {
 public:
     std::string e_texture_path;
-    float time = 0.0;
-    float initialY = 0.0;
-    const float amplitude = 20.f;
-    const float frequency = 0.3f;
+    bool collisionOccurred = false;
 
     Soldier(const std::string& texturePath)
         : e_texture_path(texturePath) {
-        hitbox.width = 30.0;
-        hitbox.height = 30.0;
+        x = 300.f;
+        y = 200.f;
+        initialX = x;
+        initialY = y;
+        sf::FloatRect _f(x, y, 64.f, 64.f);
+        setHitbox(_f);
     }
 
     void update() override {
-        time += 0.1;
+        vel_x += 0.0f;
+        vel_y += 0.9f;
 
-        // Oscillate the y position using sine function.
-        y = initialY + amplitude * std::sin(frequency * time);
+        x = initialX + vel_x;
+        y += vel_y;
 
+        setHitboxX(x);
+        setHitboxY(y);
+    }
+
+    void on_hit_signal(const sf::FloatRect& otherHitbox) override {
+        if (selfVsTile(otherHitbox)) {
+           
+        }
+
+        setHitboxX(x);
+        setHitboxY(y);
     }
 
     void draw(sf::RenderWindow& window, EntityTextures& entityTextures) override {
         sf::Sprite sprite(entityTextures.getTexture(e_texture_path));
         sprite.setPosition(x, y);
         window.draw(sprite);
+
+        sf::RectangleShape hitboxShape(sf::Vector2f(getHitbox().width, getHitbox().height));
+        hitboxShape.setPosition(x + getHitbox().left, y + getHitbox().top);
+        hitboxShape.setFillColor(sf::Color(255, 0, 0, 100));
+        window.draw(hitboxShape);
     }
+
 };
 
 #endif // SOLDIER_HPP
